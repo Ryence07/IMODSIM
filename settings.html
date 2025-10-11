@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Sleep & Productivity Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #1a2b3c;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 340px;
+            background: #f5f5f5;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 40px;
+            padding: 0 10px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #5b7fd4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .logo-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a2b3c;
+        }
+
+        .nav-menu {
+            list-style: none;
+            flex: 1;
+        }
+
+        .nav-item {
+            margin-bottom: 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #666;
+            font-weight: 500;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            background: #e8eef7;
+            color: #5b7fd4;
+        }
+
+        .nav-link.active {
+            background: #d4e3f7;
+            color: #5b7fd4;
+        }
+
+        .nav-icon {
+            font-size: 20px;
+            width: 24px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            border-top: 1px solid #ddd;
+            margin-top: auto;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #5b7fd4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #1a2b3c;
+            font-size: 14px;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .page-title {
+            font-size: 36px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 16px;
+        }
+
+        .settings-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .setting-item {
+            padding: 20px 24px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-item:hover {
+            background: #f8f9fa;
+        }
+
+        .setting-info {
+            flex: 1;
+        }
+
+        .setting-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1a2b3c;
+            margin-bottom: 4px;
+        }
+
+        .setting-description {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .setting-control {
+            margin-left: 20px;
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            width: 52px;
+            height: 28px;
+            background: #cbd5e1;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .toggle-switch.active {
+            background: #1a2b3c;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: white;
+            top: 2px;
+            left: 2px;
+            transition: left 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .toggle-switch.active::after {
+            left: 26px;
+        }
+
+        /* Action Buttons */
+        .action-button {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            width: 100%;
+            text-align: left;
+            font-family: inherit;
+        }
+
+        .action-button:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .action-button-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1a2b3c;
+        }
+
+        .action-button-icon {
+            font-size: 18px;
+            color: #666;
+        }
+
+        /* Dropdown Select */
+        .select-group {
+            display: flex;
+            gap: 16px;
+        }
+
+        .select-wrapper {
+            flex: 1;
+        }
+
+        .select-label {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .select-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            font-size: 14px;
+            color: #1a2b3c;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23666' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 36px;
+        }
+
+        .select-input:focus {
+            outline: none;
+            border-color: #5b7fd4;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 32px;
+            border-radius: 16px;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .modal-content h3 {
+            font-size: 22px;
+            color: #1a2b3c;
+            margin-bottom: 12px;
+        }
+
+        .modal-content p {
+            color: #666;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .modal-btn-cancel {
+            background: #f0f0f0;
+            color: #666;
+        }
+
+        .modal-btn-cancel:hover {
+            background: #e0e0e0;
+        }
+
+        .modal-btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .modal-btn-danger:hover {
+            background: #c82333;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .select-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <div class="logo-icon">🌙</div>
+            <div class="logo-text">Sleep & Productivity Tracker</div>
+        </div>
+
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a class="nav-link" onclick="window.location.href='dashboard.html'">
+                    <span class="nav-icon">📊</span>
+                    Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" onclick="window.location.href='sleep-analysis.html'">
+                    <span class="nav-icon">🌙</span>
+                    Sleep Analysis
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" onclick="window.location.href='recommendations.html'">
+                    <span class="nav-icon">💡</span>
+                    Recommendations
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active">
+                    <span class="nav-icon">⚙️</span>
+                    Settings
+                </a>
+            </li>
+        </ul>
+
+        <div class="user-profile" onclick="window.location.href='profile.html'">
+            <div class="user-avatar">👤</div>
+            <div class="user-info">
+                <div class="user-name" id="profileName">Ranz Cuarto</div>
+                <div class="user-role">Profile</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1 class="page-title">Settings</h1>
+
+        <!-- Notifications Section -->
+        <div class="section">
+            <h2 class="section-title">Notifications</h2>
+            <div class="settings-card">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Bedtime Reminders</div>
+                        <div class="setting-description">Reminds your start winding down for bed.</div>
+                    </div>
+                    <div class="setting-control">
+                        <div class="toggle-switch active" id="bedtimeToggle" onclick="toggleSwitch(this)"></div>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Daily Log Alerts</div>
+                        <div class="setting-description">Alerts you to log your sleep and productivity.</div>
+                    </div>
+                    <div class="setting-control">
+                        <div class="toggle-switch active" id="dailyLogToggle" onclick="toggleSwitch(this)"></div>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Productivity Check-ins</div>
+                        <div class="setting-description">Prompts for productivity check-ins during the day.</div>
+                    </div>
+                    <div class="setting-control">
+                        <div class="toggle-switch" id="productivityToggle" onclick="toggleSwitch(this)"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data & Privacy Section -->
+        <div class="section">
+            <h2 class="section-title">Data & Privacy</h2>
+            <div>
+                <button class="action-button" onclick="exportData()">
+                    <span class="action-button-label">Export Data</span>
+                    <span class="action-button-icon">⬇</span>
+                </button>
+
+                <button class="action-button" onclick="showClearLogsModal()">
+                    <span class="action-button-label">Clear Logs</span>
+                    <span class="action-button-icon">🗑</span>
+                </button>
+
+                <button class="action-button" onclick="window.location.href='profile.html'">
+                    <span class="action-button-label">Account Security</span>
+                    <span class="action-button-icon">🔒</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- General Section -->
+        <div class="section">
+            <h2 class="section-title">General</h2>
+            <div class="settings-card">
+                <div class="setting-item">
+                    <div class="select-group">
+                        <div class="select-wrapper">
+                            <label class="select-label">Unit of Time</label>
+                            <select class="select-input" id="timeUnit">
+                                <option value="12">12-hour</option>
+                                <option value="24" selected>24-hour</option>
+                            </select>
+                        </div>
+                        <div class="select-wrapper">
+                            <label class="select-label">Default Chart View</label>
+                            <select class="select-input" id="chartView">
+                                <option value="daily" selected>Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly">Monthly</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Submit Feedback</div>
+                    </div>
+                    <div class="setting-control">
+                        <span class="action-button-icon" style="cursor: pointer;" onclick="submitFeedback()">→</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Clear Logs Modal -->
+    <div id="clearLogsModal" class="modal">
+        <div class="modal-content">
+            <h3>Clear All Logs?</h3>
+            <p>This will permanently delete all your sleep history and reset your metrics. This action cannot be undone.</p>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-cancel" onclick="closeModal('clearLogsModal')">Cancel</button>
+                <button class="modal-btn modal-btn-danger" onclick="confirmClearLogs()">Clear All Data</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feedback Modal -->
+    <div id="feedbackModal" class="modal">
+        <div class="modal-content">
+            <h3>Submit Feedback</h3>
+            <p>Thank you for using Sleep & Productivity Tracker! Your feedback helps us improve.</p>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-cancel" onclick="closeModal('feedbackModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const defaultSettings = {
+            bedtimeReminder: true,
+            dailyLogAlert: true,
+            productivityCheckIn: false,
+            timeUnit: '24',
+            chartView: 'daily'
+        };
+
+        function loadSettings() {
+            const saved = localStorage.getItem('sleepTrackerSettings');
+            const settings = saved ? JSON.parse(saved) : defaultSettings;
+
+            // Set toggle states
+            if (settings.bedtimeReminder) {
+                document.getElementById('bedtimeToggle').classList.add('active');
+            }
+            if (settings.dailyLogAlert) {
+                document.getElementById('dailyLogToggle').classList.add('active');
+            }
+            if (settings.productivityCheckIn) {
+                document.getElementById('productivityToggle').classList.add('active');
+            }
+
+            // Set select values
+            document.getElementById('timeUnit').value = settings.timeUnit;
+            document.getElementById('chartView').value = settings.chartView;
+
+            // Load profile name
+            const profile = localStorage.getItem('sleepTrackerProfile');
+            if (profile) {
+                const profileData = JSON.parse(profile);
+                document.getElementById('profileName').textContent = profileData.name || 'Ranz Cuarto';
+            }
+        }
+
+        function toggleSwitch(element) {
+            element.classList.toggle('active');
+            saveSettings();
+        }
+
+        function saveSettings() {
+            const settings = {
+                bedtimeReminder: document.getElementById('bedtimeToggle').classList.contains('active'),
+                dailyLogAlert: document.getElementById('dailyLogToggle').classList.contains('active'),
+                productivityCheckIn: document.getElementById('productivityToggle').classList.contains('active'),
+                timeUnit: document.getElementById('timeUnit').value,
+                chartView: document.getElementById('chartView').value
+            };
+
+            localStorage.setItem('sleepTrackerSettings', JSON.stringify(settings));
+        }
+
+        function exportData() {
+            const state = localStorage.getItem('sleepTrackerState');
+            const settings = localStorage.getItem('sleepTrackerSettings');
+            const profile = localStorage.getItem('sleepTrackerProfile');
+            
+            const exportData = {
+                state: state ? JSON.parse(state) : null,
+                settings: settings ? JSON.parse(settings) : null,
+                profile: profile ? JSON.parse(profile) : null,
+                exportDate: new Date().toISOString()
+            };
+
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `sleep-tracker-backup-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            URL.revokeObjectURL(url);
+        }
+
+        function showClearLogsModal() {
+            document.getElementById('clearLogsModal').classList.add('active');
+        }
+
+        function confirmClearLogs() {
+            localStorage.removeItem('sleepTrackerState');
+            alert('All data has been cleared!');
+            closeModal('clearLogsModal');
+            window.location.href = 'dashboard.html';
+        }
+
+        function submitFeedback() {
+            document.getElementById('feedbackModal').classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Close modal when clicking outside
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+        });
+
+        // Save settings when selects change
+        document.getElementById('timeUnit').addEventListener('change', saveSettings);
+        document.getElementById('chartView').addEventListener('change', saveSettings);
+
+        loadSettings();
+    </script>
+</body>
+</html>
