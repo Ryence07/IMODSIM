@@ -430,7 +430,7 @@
         <div class="user-profile" onclick="window.location.href='profile.html'">
             <div class="user-avatar">👤</div>
             <div class="user-info">
-                <div class="user-name" id="profileName">Ranz Cuarto</div>
+                <div class="user-name" id="profileName">Username</div>
                 <div class="user-role">Profile</div>
             </div>
         </div>
@@ -531,7 +531,7 @@ function loadState() {
   if (profile) {
     const profileData = JSON.parse(profile);
     document.getElementById('profileName').textContent =
-      profileData.name || 'Ranz Cuarto';
+      profileData.name || 'Username';
   }
 
   updateDisplay();
