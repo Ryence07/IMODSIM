@@ -508,7 +508,7 @@
         <div class="user-profile" onclick="window.location.href='profile.html'">
             <div class="user-avatar">👤</div>
             <div class="user-info">
-                <div class="user-name" id="profileName">Ranz Cuarto</div>
+                <div class="user-name" id="profileName">Username</div>
                 <div class="user-role">Profile</div>
             </div>
         </div>
@@ -688,7 +688,7 @@
         
         if (!localStorage.getItem('sleepTrackerProfile')) {
             const initialProfile = {
-                name: 'Ranz Cuarto',
+                name: 'Username',
                 dateOfBirth: '2002-01-21',
                 address: '123 Mabini Street Barangay Malinís, Quezon City Metro Manila, Philippines 1103',
                 sleepGoal: 8,
@@ -697,9 +697,9 @@
             localStorage.setItem('sleepTrackerProfile', JSON.stringify(initialProfile));
         }
         
-        // Update profile name
+       
         const profile = JSON.parse(localStorage.getItem('sleepTrackerProfile'));
-        document.getElementById('profileName').textContent = profile.name || 'Ranz Cuarto';
+        document.getElementById('profileName').textContent = profile.name || 'Username';
     }
 
     function loadState() {
