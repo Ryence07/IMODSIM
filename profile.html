@@ -349,7 +349,7 @@
         <div class="user-profile active">
             <div class="user-avatar">👤</div>
             <div class="user-info">
-                <div class="user-name" id="sidebarName">Ranz Cuarto</div>
+                <div class="user-name" id="sidebarName">Username</div>
                 <div class="user-role">Profile</div>
             </div>
         </div>
@@ -365,7 +365,7 @@
             <div class="profile-header">
                 <div class="avatar-large">👤</div>
                 <div class="profile-title-section">
-                    <h2 id="displayName">Ranz Cuarto</h2>
+                    <h2 id="displayName">Username</h2>
                     <p id="displayDate">January 21 2002</p>
                 </div>
             </div>
@@ -419,7 +419,7 @@
         function loadProfile() {
             const saved = localStorage.getItem('sleepTrackerProfile');
             const profile = saved ? JSON.parse(saved) : {
-                name: 'Ranz Cuarto',
+                name: 'Username',
                 dateOfBirth: '2002-01-21',
                 address: '123 Mabini Street Barangay Malinís, Quezon City Metro Manila, Philippines 1103',
                 sleepGoal: 8,
@@ -438,9 +438,9 @@
 
             // View mode
             document.getElementById('viewAddress').textContent = profile.address || 'No address set';
-            document.getElementById('viewGoal').textContent = profile.sleepGoal ? profile.sleepGoal + ' hours' : 'e.g. 8';
+            document.getElementById('viewGoal').textContent = profile.sleepGoal ? profile.sleepGoal + ' hours' : 'Not set';
 
-            // Edit mode
+            // Edit mode - populate form fields
             document.getElementById('editName').value = profile.name || '';
             document.getElementById('editDate').value = profile.dateOfBirth || '';
             document.getElementById('editAddress').value = profile.address || '';
@@ -452,14 +452,20 @@
         function toggleEditMode() {
             isEditMode = !isEditMode;
             
+            const viewMode = document.getElementById('viewMode');
+            const editMode = document.getElementById('editMode');
+            const editButton = document.getElementById('editButton');
+            
             if (isEditMode) {
-                document.getElementById('viewMode').classList.add('hidden');
-                document.getElementById('editMode').classList.add('active');
-                document.getElementById('editButton').style.display = 'none';
+                viewMode.style.display = 'none';
+                editMode.classList.add('active');
+                editMode.style.display = 'block';
+                editButton.style.display = 'none';
             } else {
-                document.getElementById('viewMode').classList.remove('hidden');
-                document.getElementById('editMode').classList.remove('active');
-                document.getElementById('editButton').style.display = 'block';
+                viewMode.style.display = 'block';
+                editMode.classList.remove('active');
+                editMode.style.display = 'none';
+                editButton.style.display = 'block';
             }
         }
 
@@ -468,37 +474,75 @@
             toggleEditMode();
         }
 
-        function saveProfile() {
-            const currentProfile = loadProfile();
+        function saveProfile(event) {
+            // Get current profile to preserve memberSince
+            const saved = localStorage.getItem('sleepTrackerProfile');
+            const currentProfile = saved ? JSON.parse(saved) : {};
             
+            const name = document.getElementById('editName').value.trim();
+            const dateOfBirth = document.getElementById('editDate').value;
+            const address = document.getElementById('editAddress').value.trim();
+            const sleepGoal = parseFloat(document.getElementById('editGoal').value);
+
+            // Validation
+            if (!name) {
+                alert('Please enter your name');
+                return;
+            }
+
+            if (!sleepGoal || sleepGoal < 4 || sleepGoal > 12) {
+                alert('Please enter a valid sleep goal (4-12 hours)');
+                return;
+            }
+
             const profile = {
-                name: document.getElementById('editName').value || 'Ranz Cuarto',
-                dateOfBirth: document.getElementById('editDate').value || currentProfile.dateOfBirth,
-                address: document.getElementById('editAddress').value || '',
-                sleepGoal: parseFloat(document.getElementById('editGoal').value) || 8,
+                name: name,
+                dateOfBirth: dateOfBirth || currentProfile.dateOfBirth || '2002-01-21',
+                address: address || '',
+                sleepGoal: sleepGoal,
                 memberSince: currentProfile.memberSince || new Date().toISOString()
             };
 
+            // Save to localStorage
             localStorage.setItem('sleepTrackerProfile', JSON.stringify(profile));
+            console.log('Profile saved:', profile); // Debug log
             
-            // Update display
-            loadProfile();
-            toggleEditMode();
-
-            // Show success feedback
-            const saveBtn = event.target;
+            // Show success feedback first
+            const saveBtn = event ? event.target : document.querySelector('.save-button');
             const originalText = saveBtn.textContent;
+            const originalBg = saveBtn.style.background;
             saveBtn.textContent = '✓ Saved!';
             saveBtn.style.background = '#28a745';
             
+            // Update the display with new data
+            document.getElementById('displayName').textContent = profile.name;
+            document.getElementById('sidebarName').textContent = profile.name;
+            
+            if (profile.dateOfBirth) {
+                const date = new Date(profile.dateOfBirth);
+                const formatted = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                document.getElementById('displayDate').textContent = formatted;
+            }
+            
+            document.getElementById('viewAddress').textContent = profile.address || 'No address set';
+            document.getElementById('viewGoal').textContent = profile.sleepGoal + ' hours';
+            
+            // Wait a bit before toggling back to view mode
             setTimeout(() => {
                 saveBtn.textContent = originalText;
-                saveBtn.style.background = '';
-            }, 2000);
+                saveBtn.style.background = originalBg;
+                toggleEditMode();
+            }, 1500);
         }
 
-        // Initialize
-        loadProfile();
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProfile();
+            
+            // Ensure edit mode is hidden initially
+            const editMode = document.getElementById('editMode');
+            editMode.style.display = 'none';
+        });
     </script>
 </body>
 </html>
