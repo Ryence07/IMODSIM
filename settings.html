@@ -563,7 +563,6 @@
             const saved = localStorage.getItem('sleepTrackerSettings');
             const settings = saved ? JSON.parse(saved) : defaultSettings;
 
-            // Set toggle states
             if (settings.bedtimeReminder) {
                 document.getElementById('bedtimeToggle').classList.add('active');
             }
@@ -574,11 +573,9 @@
                 document.getElementById('productivityToggle').classList.add('active');
             }
 
-            // Set select values
             document.getElementById('timeUnit').value = settings.timeUnit;
             document.getElementById('chartView').value = settings.chartView;
 
-            // Load profile name
             const profile = localStorage.getItem('sleepTrackerProfile');
             if (profile) {
                 const profileData = JSON.parse(profile);
@@ -646,7 +643,6 @@
             document.getElementById(modalId).classList.remove('active');
         }
 
-        // Close modal when clicking outside
         document.querySelectorAll('.modal').forEach(modal => {
             modal.addEventListener('click', function(e) {
                 if (e.target === this) {
@@ -655,7 +651,6 @@
             });
         });
 
-        // Save settings when selects change
         document.getElementById('timeUnit').addEventListener('change', saveSettings);
         document.getElementById('chartView').addEventListener('change', saveSettings);
 
