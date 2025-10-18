@@ -226,6 +226,7 @@
             border-bottom: 1px solid #f0f0f0;
             font-size: 14px;
             color: #333;
+            vertical-align: middle; /* ADDED: To align buttons nicely */
         }
 
         .badge {
@@ -249,6 +250,26 @@
         .badge-low {
             background: #f8d7da;
             color: #dc3545;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            font-size: 12px;
+            border: 1px solid #ddd;
+            background: #f8f9fa;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-right: 4px;
+        }
+        .action-btn:hover {
+            background: #e9ecef;
+        }
+        .action-btn.delete {
+            color: #dc3545;
+        }
+        .action-btn.delete:hover {
+            background: #f8d7da;
+            border-color: #f5c6cb;
         }
 
         /* Recommendations */
@@ -301,56 +322,75 @@
             color: #999;
             margin-bottom: 16px;
         }
-
-        .area-chart {
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(to bottom, #ffd966 0%, #ffb84d 50%, #ff9933 100%);
-            border-radius: 12px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .bar-chart {
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-between;
-            height: 100%;
-            gap: 12px;
-            padding: 0 10px;
-        }
-
-        .bar-item {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
             align-items: center;
-            gap: 8px;
+            justify-content: center;
         }
-
-        .bar {
+        .modal-content {
+            background-color: #fefefe;
+            padding: 24px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .modal-content h3 {
+            margin-bottom: 16px;
+        }
+        .modal-content p {
+            margin-bottom: 20px;
+            color: #666;
+        }
+        .modal-content label {
+            display: block;
+            margin-bottom: 8px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+        }
+        .modal-content input {
             width: 100%;
-            background: #5b7fd4;
-            border-radius: 6px 6px 0 0;
-            min-height: 20px;
-            transition: all 0.3s;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+        .modal-buttons button {
+            padding: 10px 24px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .modal-btn-primary {
+            background-color: #5b7fd4;
+            color: white;
+        }
+        .modal-btn-secondary {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        .modal-btn-danger {
+            background-color: #dc3545;
+            color: white;
         }
 
-        .bar:hover {
-            opacity: 0.8;
-        }
-
-        .bar-label {
-            font-size: 12px;
-            color: #999;
-            font-weight: 500;
-        }
-
-        .sleep-duration-label {
-            font-size: 13px;
-            color: #999;
-            margin-top: 12px;
-        }
 
         @media (max-width: 1200px) {
             .sidebar {
@@ -393,7 +433,6 @@
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
     <div class="sidebar">
         <div class="logo">
             <div class="logo-icon">🌙</div>
@@ -436,12 +475,10 @@
         </div>
     </div>
 
-    <!-- Main Content -->
     <div class="main-content">
         <h1 class="page-title">Dashboard</h1>
 
         <div class="content-grid">
-            <!-- Daily Input & Results -->
             <div>
                 <div class="card">
                     <h2 class="card-title">Daily Input</h2>
@@ -461,14 +498,12 @@
                                 <th>Sleep Hours</th>
                                 <th>Energy</th>
                                 <th>Focus</th>
-                                <th>Task Performance</th>
                                 <th>Productivity</th>
-                            </tr>
+                                <th>Actions</th> </tr>
                         </thead>
                         <tbody id="resultsTable">
                             <tr>
-                                <td colspan="6" style="text-align: center; color: #999; padding: 30px;">
-                                    No data yet. Log your first sleep entry!
+                                <td colspan="6" style="text-align: center; color: #999; padding: 30px;"> No data yet. Log your first sleep entry!
                                 </td>
                             </tr>
                         </tbody>
@@ -476,7 +511,6 @@
                 </div>
             </div>
 
-            <!-- Recommendations -->
             <div class="card">
                 <h2 class="card-title">Recommendations</h2>
                 <div class="rec-action" style="cursor: pointer;"></div>
@@ -490,9 +524,7 @@
             </div>
         </div>
 
-        <!-- Charts -->
-
-    <div class="charts-row">
+        <div class="charts-row">
         <div class="card">
             <h2 class="card-title">Metrics Over Time</h2>
             <div class="chart-container">
@@ -508,6 +540,29 @@
             </div>
         </div>
     </div>
+</div> <div id="editModal" class="modal">
+        <div class="modal-content">
+            <h3>Edit Sleep Entry</h3>
+            <label for="editSleepHours">Sleep hours:</label>
+            <input type="number" id="editSleepHours" step="0.5" min="0" max="24">
+            <div class="modal-buttons">
+                <button class="modal-btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="modal-btn-primary" onclick="saveEdit()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <h3>Confirm Deletion</h3>
+            <p>Are you sure you want to delete this entry? This action cannot be undone.</p>
+            <div class="modal-buttons">
+                <button class="modal-btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="modal-btn-danger" onclick="confirmDelete()">Delete</button>
+            </div>
+        </div>
+    </div>
+
 
     <script>
 const state = {
@@ -517,14 +572,14 @@ const state = {
   history: []
 };
 
+
+let activeEntryId = null; 
+
 function loadState() {
   const saved = localStorage.getItem('sleepTrackerState');
   if (saved) {
     const parsed = JSON.parse(saved);
-    state.energy = parsed.energy || 70;
-    state.focus = parsed.focus || 60;
-    state.sleepDebt = parsed.sleepDebt || 0;
-    state.history = parsed.history || [];
+    Object.assign(state, parsed);
   }
 
   const profile = localStorage.getItem('sleepTrackerProfile');
@@ -579,39 +634,86 @@ function getBadgeText(v) {
 }
 
 function logSleep() {
-  const sleepHours = parseFloat(document.getElementById('sleepHours').value);
+  const sleepHoursInput = document.getElementById('sleepHours');
+  const sleepHours = parseFloat(sleepHoursInput.value);
   if (isNaN(sleepHours) || sleepHours < 0 || sleepHours > 24) {
     alert('Please enter a valid number of hours (0–24)');
     return;
   }
 
-  const newEnergy = calculateEnergy(sleepHours, state.energy, state.sleepDebt);
-  const newFocus = calculateFocus(sleepHours, newEnergy);
-  const sleepDeficit = Math.max(0, 7 - sleepHours);
-  state.sleepDebt += sleepDeficit;
-  state.sleepDebt = Math.max(0, state.sleepDebt);
-
-  state.energy = Math.round(newEnergy);
-  state.focus = Math.round(newFocus);
-
-  const productivity = Math.round((state.energy + state.focus) / 2);
-
-  const entry = {
+  const newEntry = {
+    id: new Date().getTime(), 
     date: new Date().toLocaleDateString(),
-    day: `Day ${state.history.length + 1}`,
+    day: `Day ${state.history.length + 1}`, 
     hours: sleepHours,
-    energy: state.energy,
-    focus: state.focus,
-    performance: getPerformanceLabel(state.energy),
-    productivity
+    energy: 0, 
+    focus: 0,  
+    performance: 'Poor', 
+    productivity: 0 
   };
 
-  state.history.unshift(entry);
+  state.history.unshift(newEntry);
   if (state.history.length > 7) state.history.pop();
-
+  
+  recalculateStateFromHistory(); 
   saveState();
   updateDisplay();
-  document.getElementById('sleepHours').value = '';
+  sleepHoursInput.value = '';
+}
+
+function saveEdit() {
+  const newHoursInput = document.getElementById('editSleepHours');
+  const newHours = parseFloat(newHoursInput.value);
+  if (isNaN(newHours) || newHours < 0 || newHours > 24) {
+    alert('Please enter a valid number of hours (0-24).');
+    return;
+  }
+
+  const entry = state.history.find(e => e.id === activeEntryId);
+  if (entry) {
+    entry.hours = newHours;
+    recalculateStateFromHistory(); 
+    saveState();
+    updateDisplay();
+  }
+  closeModal();
+}
+
+function confirmDelete() {
+  state.history = state.history.filter(e => e.id !== activeEntryId);
+  recalculateStateFromHistory(); 
+  saveState();
+  updateDisplay();
+  closeModal();
+}
+
+function recalculateStateFromHistory() {
+  const reversedHistory = state.history.slice().reverse();
+  let lastDayState = { energy: 70, focus: 60, sleepDebt: 0 };
+  let dayCounter = 1;
+
+  for (const entry of reversedHistory) {
+    const sleepHours = entry.hours;
+    const newEnergy = calculateEnergy(sleepHours, lastDayState.energy, lastDayState.sleepDebt);
+    const newFocus = calculateFocus(sleepHours, newEnergy);
+    
+    const sleepDeficit = Math.max(0, 7.5 - sleepHours); 
+    const recovery = (sleepHours >= 7.5) ? 1.5 : (sleepHours >= 6) ? 1 : 0.5;
+    const newSleepDebt = Math.max(0, lastDayState.sleepDebt + sleepDeficit - recovery);
+
+    entry.day = `Day ${dayCounter++}`; 
+    entry.energy = Math.round(newEnergy);
+    entry.focus = Math.round(newFocus);
+    entry.productivity = Math.round((newEnergy + newFocus) / 2);
+    
+    entry.performance = getPerformanceLabel(entry.energy); 
+
+    lastDayState = { energy: entry.energy, focus: entry.focus, sleepDebt: newSleepDebt };
+  }
+
+  state.energy = (state.history.length > 0) ? lastDayState.energy : 70;
+  state.focus = (state.history.length > 0) ? lastDayState.focus : 60;
+  state.sleepDebt = (state.history.length > 0) ? lastDayState.sleepDebt : 0;
 }
 
 function updateDisplay() {
@@ -625,22 +727,24 @@ function updateDisplay() {
       </tr>`;
   } else {
     tbody.innerHTML = state.history
-      .slice(0, 4)
       .map(
         e => `
       <tr>
         <td><strong>${e.day}</strong></td>
-        <td>${e.hours}</td>
+        <td>${e.hours}h</td>
         <td><span class="badge ${getBadgeClass(e.energy)}">${getBadgeText(
           e.energy
         )}</span></td>
         <td><span class="badge ${getBadgeClass(e.focus)}">${getBadgeText(
           e.focus
         )}</span></td>
-        <td>${e.performance}</td>
         <td><span class="badge ${getBadgeClass(e.productivity)}">${getBadgeText(
           e.productivity
         )}</span></td>
+        <td>
+            <button class="action-btn" onclick="openEditModal(${e.id})">Edit</button>
+            <button class="action-btn delete" onclick="openDeleteModal(${e.id})">Delete</button>
+        </td>
       </tr>`
       )
       .join('');
@@ -650,7 +754,6 @@ function updateDisplay() {
   updateCharts();
 }
 
-// ✅ Dynamic Recommendations
 function updateRecommendations() {
   const container = document.getElementById('recommendationsContainer');
   if (state.history.length === 0) {
@@ -701,11 +804,30 @@ function updateRecommendations() {
     <div class="recommendation-card">
       <div class="rec-title">${title}</div>
       <p class="rec-text">${msg}</p>
-      <div class="rec-action" style="cursor:pointer;">View tips →</div>
+      <div class="rec-action" style="cursor:pointer;" onclick="window.location.href='recommendations.html'">View tips →</div>
     </div>`;
 }
 
-// ✅ Wavy “Metrics Over Time” chart (dynamic & smooth)
+function openEditModal(id) {
+  const entry = state.history.find(e => e.id === id);
+  if (entry) {
+    activeEntryId = id;
+    document.getElementById('editSleepHours').value = entry.hours;
+    document.getElementById('editModal').style.display = 'flex';
+  }
+}
+
+function openDeleteModal(id) {
+  activeEntryId = id;
+  document.getElementById('deleteModal').style.display = 'flex';
+}
+
+function closeModal() {
+  document.getElementById('editModal').style.display = 'none';
+  document.getElementById('deleteModal').style.display = 'none';
+  activeEntryId = null;
+}
+
 function updateMetricsChart() {
   const canvas = document.getElementById('metricsChart');
   if (!canvas) return;
@@ -717,53 +839,66 @@ function updateMetricsChart() {
     ctx.fillStyle = '#666';
     ctx.font = '14px Arial';
     ctx.textAlign = 'center';
-    ctx.fillText('Log sleep data to see charts', canvas.width / 2, canvas.height / 2);
+    ctx.fillText('Log sleep data to see charts', canvas.width / 1.7, canvas.height / 1.7);
     return;
   }
 
   const padding = 40;
   const w = canvas.width - padding * 2;
   const h = canvas.height - padding * 2;
+  
+  if (data.length === 1) {
+      data.push(data[0]); 
+  }
 
   const points = data.map((d, i) => ({
     x: padding + (w / (data.length - 1)) * i,
     y: padding + h - ((d.productivity || 0) / 100) * h
   }));
 
-  // Fill gradient (mountain)
   const grad = ctx.createLinearGradient(0, padding, 0, canvas.height);
   grad.addColorStop(0, 'rgba(255,206,86,0.6)');
   grad.addColorStop(1, 'rgba(255,206,86,0)');
 
   ctx.beginPath();
-  ctx.moveTo(points[0].x, points[0].y);
-  for (let i = 1; i < points.length; i++) {
-    const prev = points[i - 1];
-    const curr = points[i];
-    const cx = (prev.x + curr.x) / 2;
-    ctx.quadraticCurveTo(prev.x, prev.y, cx, (prev.y + curr.y) / 2);
+  if (points.length > 0) {
+    ctx.moveTo(points[0].x, points[0].y);
+    for (let i = 1; i < points.length; i++) {
+        const prev = points[i - 1];
+        const curr = points[i];
+        const cx = (prev.x + curr.x) / 2;
+        ctx.quadraticCurveTo(prev.x, prev.y, cx, (prev.y + curr.y) / 2);
+    }
+    
+    if (points.length > 1) {
+        ctx.lineTo(points[points.length - 1].x, points[points.length - 1].y);
+    }
+    
+    ctx.lineTo(points[points.length - 1].x, canvas.height - padding);
+    ctx.lineTo(points[0].x, canvas.height - padding);
   }
-  ctx.lineTo(points[points.length - 1].x, canvas.height - padding);
-  ctx.lineTo(points[0].x, canvas.height - padding);
   ctx.closePath();
 
   ctx.fillStyle = grad;
   ctx.fill();
 
-  // Outline line
   ctx.beginPath();
-  ctx.moveTo(points[0].x, points[0].y);
-  for (let i = 1; i < points.length; i++) {
-    const prev = points[i - 1];
-    const curr = points[i];
-    const cx = (prev.x + curr.x) / 2;
-    ctx.quadraticCurveTo(prev.x, prev.y, cx, (prev.y + curr.y) / 2);
+  if (points.length > 0) {
+    ctx.moveTo(points[0].x, points[0].y);
+    for (let i = 1; i < points.length; i++) {
+        const prev = points[i - 1];
+        const curr = points[i];
+        const cx = (prev.x + curr.x) / 2;
+        ctx.quadraticCurveTo(prev.x, prev.y, cx, (prev.y + curr.y) / 2);
+    }
+    if (points.length > 1) {
+       ctx.lineTo(points[points.length - 1].x, points[points.length - 1].y);
+    }
   }
   ctx.strokeStyle = '#FFB300';
   ctx.lineWidth = 3;
   ctx.stroke();
 
-  // Y labels
   ctx.fillStyle = '#999';
   ctx.font = '12px Arial';
   ctx.textAlign = 'right';
@@ -772,17 +907,12 @@ function updateMetricsChart() {
     ctx.fillText(`${100 - i * 25}%`, padding - 10, y + 4);
   }
 
-  // X labels
   ctx.textAlign = 'center';
-  data.forEach((d, i) => {
-    const x = padding + (w / (data.length - 1)) * i;
-    ctx.fillText(d.day, x, canvas.height - 10);
+  const xLabels = data.map(d => d.day);
+  xLabels.forEach((d, i) => {
+    const x = padding + (w / (xLabels.length - 1)) * i;
+    ctx.fillText(d, x, canvas.height - 10);
   });
-
-  // Title
-  ctx.fillStyle = '#333';
-  ctx.font = '14px Arial';
-  ctx.fillText('Metrics Over Time', canvas.width / 2, 20);
 }
 
 function updateSleepChart() {
@@ -796,7 +926,7 @@ function updateSleepChart() {
     ctx.fillStyle = '#666';
     ctx.font = '14px Arial';
     ctx.textAlign = 'center';
-    ctx.fillText('No data to display', canvas.width / 2, canvas.height / 2);
+    ctx.fillText('No data to display', canvas.width / 1.7, canvas.height / 2.5);
     return;
   }
 
@@ -827,32 +957,15 @@ function updateSleepChart() {
     ctx.fillStyle = '#999';
     ctx.fillText(d.day, x + barW / 2, canvas.height - padding + 20);
   });
-
-  ctx.fillStyle = '#333';
-  ctx.font = '14px Arial';
-  ctx.textAlign = 'center';
-  ctx.fillText('Sleep Duration (Last 7 Days)', canvas.width / 2, 20);
 }
 
-// ✅ Unified chart update
 function updateCharts() {
   updateMetricsChart();
   updateSleepChart();
 }
 
-// ✅ “Enter” key shortcut
 document.getElementById('sleepHours').addEventListener('keypress', e => {
   if (e.key === 'Enter') logSleep();
-});
-
-// ✅ Redirect on “View tips →”
-document.addEventListener('click', e => {
-  if (
-    e.target.classList.contains('rec-action') &&
-    e.target.textContent.includes('View tips')
-  ) {
-    window.location.href = 'recommendations.html';
-  }
 });
 
 loadState();
