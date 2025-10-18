@@ -490,7 +490,6 @@
         function updateRecommendations() {
             const state = loadState();
             
-            // Load profile name
             const profile = localStorage.getItem('sleepTrackerProfile');
             if (profile) {
                 const profileData = JSON.parse(profile);
