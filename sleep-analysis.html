@@ -260,7 +260,6 @@
             color: #999;
         }
 
-        /* Calendar Heatmap */
         .calendar-header {
             display: flex;
             justify-content: space-between;
@@ -277,6 +276,7 @@
             display: flex;
             gap: 12px;
             font-size: 11px;
+            flex-wrap: wrap;
         }
 
         .legend-badge {
@@ -326,30 +326,13 @@
             background: transparent;
         }
 
-        .calendar-day.excellent {
-            background: #4ade80;
-            color: white;
-        }
+        .calendar-day.excellent { background: #4ade80; color: white; }
+        .calendar-day.good { background: #60a5fa; color: white; }
+        .calendar-day.fair { background: #a78bfa; color: white; }
+        .calendar-day.poor { background: #f87171; color: white; } 
+        .calendar-day.no-data { background: #e2e8f0; color: #64748b; } 
+        .calendar-day.future { background: #f1f5f9; color: #cbd5e1; }
 
-        .calendar-day.good {
-            background: #60a5fa;
-            color: white;
-        }
-
-        .calendar-day.fair {
-            background: #a78bfa;
-            color: white;
-        }
-
-        .calendar-day.poor {
-            background: #94a3b8;
-            color: white;
-        }
-
-        .calendar-day.future {
-            background: #f1f5f9;
-            color: #cbd5e1;
-        }
 
         /* Productivity Meters */
         .meter-item {
@@ -388,7 +371,6 @@
             transition: width 0.5s ease;
         }
 
-        /* Quick Insights */
         .insight-item {
             display: flex;
             gap: 12px;
@@ -450,28 +432,27 @@
             }
 
             .filter-select {
-    padding: 8px 12px;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    font-size: 14px;
-    background: white;
-    cursor: pointer;
-    outline: none;
-    transition: all 0.3s;
-}
+                padding: 8px 12px;
+                border: 2px solid #e0e0e0;
+                border-radius: 8px;
+                font-size: 14px;
+                background: white;
+                cursor: pointer;
+                outline: none;
+                transition: all 0.3s;
+            }
 
-.filter-select:focus {
-    border-color: #5b7fd4;
-}
+            .filter-select:focus {
+                border-color: #5b7fd4;
+            }
 
-.filter-select:hover {
-    border-color: #5b7fd4;
-}
+            .filter-select:hover {
+                border-color: #5b7fd4;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
     <div class="sidebar">
         <div class="logo">
             <div class="logo-icon">🌙</div>
@@ -514,7 +495,6 @@
         </div>
     </div>
 
-    <!-- Main Content -->
     <div class="main-content">
         <div class="page-header">
             <h1 class="page-title">Sleep Analysis</h1>
@@ -538,81 +518,87 @@
 
         <div class="content-grid">
             <div>
-                            <!-- Sleep Pattern Chart -->
-            <div class="card" style="margin-bottom: 20px;">
-                <div class="card-header">
-                    <h2 class="card-title">Sleep Pattern</h2>
-                    <select class="filter-select" id="patternFilter" onchange="updateChart()">
-                        <option value="all">All</option>
-                        <option value="excellent">Excellent</option>
-                        <option value="good">Good</option>
-                        <option value="fair">Fair</option>
-                        <option value="poor">Poor</option>
-                    </select>
-                </div>
-                
-                <div class="chart-legend">
-                    <div class="legend-item">
-                        <span class="legend-dot" style="background: #ef4444;"></span>
-                        <span>Energy</span>
+                <div class="card" style="margin-bottom: 20px;">
+                    <div class="card-header">
+                        <h2 class="card-title">Sleep Pattern</h2>
+                        <select class="filter-select" id="patternFilter" onchange="updateChart()">
+                            <option value="all">All</option>
+                            <option value="excellent">Excellent</option>
+                            <option value="good">Good</option>
+                            <option value="fair">Fair</option>
+                            <option value="poor">Poor</option>
+                        </select>
                     </div>
-                    <div class="legend-item">
-                        <span class="legend-dot" style="background: #3b82f6;"></span>
-                        <span>Focus</span>
+                    
+                    <div class="chart-legend">
+                        <div class="legend-item">
+                            <span class="legend-dot" style="background: #ef4444;"></span>
+                            <span>Energy</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-dot" style="background: #3b82f6;"></span>
+                            <span>Focus</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-dot" style="background: #8b5cf6;"></span>
+                            <span>Productivity</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-dot" style="background: #10b981;"></span>
+                            <span>Task Performance</span>
+                        </div>
                     </div>
-                    <div class="legend-item">
-                        <span class="legend-dot" style="background: #8b5cf6;"></span>
-                        <span>Productivity</span>
+
+                    <div class="line-chart-container" id="lineChart">
+                        <div class="chart-grid">
+                            <div class="grid-line"></div>
+                            <div class="grid-line"></div>
+                            <div class="grid-line"></div>
+                            <div class="grid-line"></div>
+                            <div class="grid-line"></div>
+                        </div>
+                        <canvas id="patternCanvas"></canvas>
                     </div>
-                    <div class="legend-item">
-                        <span class="legend-dot" style="background: #10b981;"></span>
-                        <span>Task Performance</span>
+                    <div class="chart-labels" id="chartLabels">
+                        <span>Mon</span>
+                        <span>Tue</span>
+                        <span>Wed</span>
+                        <span>Thu</span>
+                        <span>Fri</span>
+                        <span>Sat</span>
+                        <span>Sun</span>
                     </div>
                 </div>
 
-                <div class="line-chart-container" id="lineChart">
-                    <div class="chart-grid">
-                        <div class="grid-line"></div>
-                        <div class="grid-line"></div>
-                        <div class="grid-line"></div>
-                        <div class="grid-line"></div>
-                        <div class="grid-line"></div>
-                    </div>
-                    <canvas id="patternCanvas"></canvas>
-                </div>
-                <div class="chart-labels" id="chartLabels">
-                    <span>Mon</span>
-                    <span>Tue</span>
-                    <span>Wed</span>
-                    <span>Thu</span>
-                    <span>Fri</span>
-                    <span>Sat</span>
-                    <span>Sun</span>
-                </div>
-            </div>
-
-                <!-- Sleep Consistency Calendar -->
                 <div class="card">
                     <div class="card-header">
                         <h2 class="card-title">Sleep Consistency</h2>
                         <div class="calendar-legend">
                             <div class="legend-badge">
                                 <span class="legend-color" style="background: #4ade80;"></span>
-                                <span>Excellent</span>
+                                <span>Excellent (&gt;8h)</span>
                             </div>
                             <div class="legend-badge">
                                 <span class="legend-color" style="background: #60a5fa;"></span>
-                                <span>Good</span>
+                                <span>Good (8-7h)</span>
                             </div>
                             <div class="legend-badge">
-                                <span class="legend-color" style="background: #94a3b8;"></span>
-                                <span>Inconsistent</span>
+                                <span class="legend-color" style="background: #a78bfa;"></span>
+                                <span>Fair (7-6h)</span>
+                            </div>
+                             <div class="legend-badge">
+                                <span class="legend-color" style="background: #f87171;"></span>
+                                <span>Poor (&lt;6h)</span>
+                            </div>
+                             <div class="legend-badge">
+                                <span class="legend-color" style="background: #e2e8f0;"></span>
+                                <span>No Data</span>
                             </div>
                         </div>
                     </div>
 
                     <div class="calendar-header">
-                        <div class="calendar-month" id="calendarMonth">July 2025</div>
+                        <div class="calendar-month" id="calendarMonth">October 2025</div>
                     </div>
 
                     <div class="calendar-grid" id="calendarGrid"></div>
@@ -620,7 +606,6 @@
             </div>
 
             <div>
-                <!-- Productivity Meters -->
                 <div class="card" style="margin-bottom: 20px;">
                     <h2 class="card-title">Productivity Meters</h2>
                     
@@ -655,7 +640,6 @@
                     </div>
                 </div>
 
-                <!-- Quick Insights -->
                 <div class="card">
                     <h2 class="card-title">Quick Insights</h2>
                     
@@ -674,43 +658,33 @@
     </div>
 
     <script>
-    // Initialize app
+    // Initialize
     function initializeApp() {
         if (!localStorage.getItem('sleepTrackerState')) {
             const initialState = {
-                energy: 70,
-                focus: 60,
-                sleepDebt: 0,
-                history: []
+                energy: 70, focus: 60, sleepDebt: 0, history: []
             };
             localStorage.setItem('sleepTrackerState', JSON.stringify(initialState));
         }
         
         if (!localStorage.getItem('sleepTrackerProfile')) {
             const initialProfile = {
-                name: 'Username',
-                dateOfBirth: '2002-01-21',
+                name: 'Username', dateOfBirth: '2002-01-21',
                 address: '123 Mabini Street Barangay Malinís, Quezon City Metro Manila, Philippines 1103',
-                sleepGoal: 8,
-                memberSince: new Date().toISOString()
+                sleepGoal: 8, memberSince: new Date().toISOString()
             };
             localStorage.setItem('sleepTrackerProfile', JSON.stringify(initialProfile));
         }
         
-       
         const profile = JSON.parse(localStorage.getItem('sleepTrackerProfile'));
         document.getElementById('profileName').textContent = profile.name || 'Username';
     }
 
     function loadState() {
         const saved = localStorage.getItem('sleepTrackerState');
-        if (saved) {
-            return JSON.parse(saved);
-        }
-        return { energy: 70, focus: 60, sleepDebt: 0, history: [] };
+        return saved ? JSON.parse(saved) : { energy: 70, focus: 60, sleepDebt: 0, history: [] };
     }
 
-    // Filter functions
     function getPerformanceCategory(performance) {
         if (performance === 'Excellent') return 'excellent';
         if (performance === 'Good') return 'good';
@@ -720,11 +694,7 @@
 
     function filterDataByPerformance(data, filter) {
         if (filter === 'all') return data;
-        
-        return data.filter(entry => {
-            const category = getPerformanceCategory(entry.performance);
-            return category === filter;
-        });
+        return data.filter(entry => getPerformanceCategory(entry.performance) === filter);
     }
 
     function updateChart() {
@@ -733,23 +703,16 @@
         updateStats();
     }
 
-    // Chart drawing functions - UPDATED
     function drawLineChart(filter = 'all') {
         const canvas = document.getElementById('patternCanvas');
-        if (!canvas) {
-            console.log('Canvas element not found');
-            return;
-        }
+        if (!canvas) return;
         
         const ctx = canvas.getContext('2d');
         const state = loadState();
         
-        // Set canvas size properly
         const container = canvas.parentElement;
         canvas.width = container.clientWidth;
         canvas.height = container.clientHeight;
-        
-        // Clear canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
         if (state.history.length === 0) {
@@ -758,12 +721,7 @@
             return;
         }
         
-        let data = state.history.slice().reverse().slice(-7);
-        
-        // Apply filter
-        if (filter !== 'all') {
-            data = filterDataByPerformance(data, filter);
-        }
+        let data = filterDataByPerformance(state.history.slice().reverse().slice(-7), filter);
         
         if (data.length === 0) {
             drawNoDataMessage(ctx, canvas, `No ${filter} performance data available`);
@@ -771,393 +729,261 @@
             return;
         }
         
-        // Improved padding for better spacing
-        const padding = { top: 40, right: 40, bottom: 40, left: 60 };
+        const padding = { top: 20, right: 20, bottom: 30, left: 40 };
         const chartWidth = canvas.width - padding.left - padding.right;
         const chartHeight = canvas.height - padding.top - padding.bottom;
         
-        // Draw background
-        drawChartBackground(ctx, canvas, padding);
+        drawChartGrid(ctx, canvas, padding, chartHeight);
         
-        // Draw grid and labels
-        drawChartGrid(ctx, canvas, padding, chartWidth, chartHeight);
-        
-        // Define metrics with professional colors
         const metrics = [
-            { 
-                key: 'energy', 
-                color: '#ef4444',
-                label: 'Energy'
-            },
-            { 
-                key: 'focus', 
-                color: '#3b82f6',
-                label: 'Focus'
-            },
-            { 
-                key: 'productivity', 
-                color: '#8b5cf6',
-                label: 'Productivity'
-            },
-            {
-                key: 'task',
-                color: '#10b981',
-                label: 'Task Performance'
-            }
+            { key: 'energy', color: '#ef4444' },
+            { key: 'focus', color: '#3b82f6' },
+            { key: 'productivity', color: '#8b5cf6' },
+            { key: 'task', color: '#10b981' }
         ];
         
-        // Draw lines and points with better spacing
-        metrics.forEach(metric => {
-            drawMetricLine(ctx, data, metric, padding, chartWidth, chartHeight);
-        });
-        
-        // Update X-axis labels based on filtered data
+        metrics.forEach(metric => drawMetricLine(ctx, data, metric, padding, chartWidth, chartHeight));
         updateChartLabels(data);
     }
 
     function drawNoDataMessage(ctx, canvas, message) {
         ctx.fillStyle = '#94a3b8';
-        ctx.font = '14px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+        ctx.font = '14px -apple-system, sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(message, canvas.width / 2, canvas.height / 2);
     }
 
-    function drawChartBackground(ctx, canvas, padding) {
-        // Draw white background
-        ctx.fillStyle = 'white';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-    }
-
-    function drawChartGrid(ctx, canvas, padding, chartWidth, chartHeight) {
-        ctx.strokeStyle = '#f8fafc';
+    function drawChartGrid(ctx, canvas, padding, chartHeight) {
+        ctx.strokeStyle = '#f1f5f9';
         ctx.lineWidth = 1;
         ctx.fillStyle = '#64748b';
-        ctx.font = '11px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+        ctx.font = '11px -apple-system, sans-serif';
         
-        // Draw horizontal grid lines and Y-axis labels
         for (let i = 0; i <= 4; i++) {
             const y = padding.top + (chartHeight / 4) * i;
             const value = 100 - i * 25;
             
-            // Grid line
             ctx.beginPath();
             ctx.moveTo(padding.left, y);
             ctx.lineTo(canvas.width - padding.right, y);
             ctx.stroke();
             
-            // Y-axis label
             ctx.textAlign = 'right';
             ctx.fillText(value + '%', padding.left - 8, y + 3);
         }
     }
 
-    // UPDATED: Improved metric line drawing with better point distribution
     function drawMetricLine(ctx, data, metric, padding, chartWidth, chartHeight) {
         if (data.length === 0) return;
         
         ctx.beginPath();
         ctx.strokeStyle = metric.color;
-        ctx.lineWidth = 3;
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
+        ctx.lineWidth = 2.5;
         
-        // Calculate x spacing based on number of data points
-        const xSpacing = data.length > 1 ? chartWidth / (data.length - 1) : chartWidth;
+        const xSpacing = data.length > 1 ? chartWidth / (data.length - 1) : chartWidth / 2;
         
         data.forEach((entry, i) => {
-            const value = metric.key === 'productivity' 
-                ? (entry.energy + entry.focus) / 2 
-                : metric.key === 'task'
-                ? getTaskPerformanceValue(entry.energy)
-                : entry[metric.key];
-            
+            const value = metric.key === 'productivity' ? (entry.energy + entry.focus) / 2 :
+                          metric.key === 'task' ? getTaskPerformanceValue(entry.energy) : entry[metric.key];
             const x = padding.left + (xSpacing * i);
             const y = padding.top + chartHeight - (value / 100) * chartHeight;
             
-            if (i === 0) {
-                ctx.moveTo(x, y);
-            } else {
-                ctx.lineTo(x, y);
-            }
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
         });
-        
         ctx.stroke();
-        
-        // Draw data points with better visibility
+
         data.forEach((entry, i) => {
-            const value = metric.key === 'productivity' 
-                ? (entry.energy + entry.focus) / 2 
-                : metric.key === 'task'
-                ? getTaskPerformanceValue(entry.energy)
-                : entry[metric.key];
-            
-            const x = padding.left + (data.length > 1 ? (chartWidth / (data.length - 1)) * i : chartWidth / 2);
+            const value = metric.key === 'productivity' ? (entry.energy + entry.focus) / 2 :
+                          metric.key === 'task' ? getTaskPerformanceValue(entry.energy) : entry[metric.key];
+            const x = padding.left + (xSpacing * i);
             const y = padding.top + chartHeight - (value / 100) * chartHeight;
             
-            // Outer circle
-            ctx.beginPath();
-            ctx.fillStyle = metric.color;
-            ctx.arc(x, y, 6, 0, Math.PI * 2);
-            ctx.fill();
-            
-            // Inner white circle
             ctx.beginPath();
             ctx.fillStyle = 'white';
-            ctx.arc(x, y, 3, 0, Math.PI * 2);
+            ctx.strokeStyle = metric.color;
+            ctx.lineWidth = 2;
+            ctx.arc(x, y, 4, 0, Math.PI * 2);
             ctx.fill();
+            ctx.stroke();
         });
     }
 
     function getTaskPerformanceValue(energy) {
         if (energy >= 80) return 90;
-        if (energy >= 60) return 70;
-        return 50;
+        if (energy >= 65) return 75;
+        if (energy >= 50) return 60;
+        return 40;
     }
-
-    function getPerformanceColor(performance) {
-        switch(performance) {
-            case 'Excellent': return '#10b981';
-            case 'Good': return '#3b82f6';
-            case 'Fair': return '#f59e0b';
-            case 'Poor': return '#ef4444';
-            default: return '#94a3b8';
-        }
-    }
-
+    
     function updateChartLabels(data) {
         const labelsContainer = document.getElementById('chartLabels');
-        
         if (!data || data.length === 0) {
-            // Show default day labels
-            labelsContainer.innerHTML = `
-                <span>Mon</span>
-                <span>Tue</span>
-                <span>Wed</span>
-                <span>Thu</span>
-                <span>Fri</span>
-                <span>Sat</span>
-                <span>Sun</span>
-            `;
+            labelsContainer.innerHTML = `<span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>`;
             return;
         }
-        
-        // Create labels based on actual data days
-        let labelsHtml = '';
-        data.forEach(entry => {
-            // Use short day names from the entry
-            const shortDay = entry.day.replace('Day ', 'D');
-            labelsHtml += `<span>${shortDay}</span>`;
-        });
-        
-        labelsContainer.innerHTML = labelsHtml;
+        labelsContainer.innerHTML = data.map(entry => `<span>${entry.day.replace('Day ', 'D')}</span>`).join('');
     }
 
-    // Stats and insights functions
     function updateStats() {
         const state = loadState();
-        const filter = document.getElementById('patternFilter').value;
-        
-        let data = state.history;
-        
-        // Apply filter to stats as well
-        if (filter !== 'all') {
-            data = filterDataByPerformance(data, filter);
-        }
+        let data = filterDataByPerformance(state.history, document.getElementById('patternFilter').value);
         
         if (data.length === 0) {
-            document.getElementById('avgSleep').textContent = '--';
-            document.getElementById('bestDay').textContent = '--';
-            document.getElementById('sleepQuality').textContent = '--/100';
-            document.getElementById('energyPercent').textContent = '--';
-            document.getElementById('focusPercent').textContent = '--';
-            document.getElementById('taskPercent').textContent = '--';
-            document.getElementById('energyBar').style.width = '0%';
-            document.getElementById('focusBar').style.width = '0%';
-            document.getElementById('taskBar').style.width = '0%';
-            updateInsights([], filter);
+            ['avgSleep', 'bestDay', 'sleepQuality', 'energyPercent', 'focusPercent', 'taskPercent'].forEach(id => {
+                document.getElementById(id).textContent = '--';
+            });
+            ['energyBar', 'focusBar', 'taskBar'].forEach(id => document.getElementById(id).style.width = '0%');
+            updateInsights([], document.getElementById('patternFilter').value);
             return;
         }
 
-        // Calculate stats based on filtered data
         const avgSleep = (data.reduce((sum, h) => sum + h.hours, 0) / data.length).toFixed(1);
-        const bestEntry = data.reduce((best, curr) => curr.hours > best.hours ? curr : best, data[0]);
-        const bestDay = bestEntry.day;
-        const quality = Math.round((avgSleep / 8) * 100);
-
+        const bestEntry = data.reduce((best, curr) => curr.productivity > best.productivity ? curr : best, data[0]);
+        
         document.getElementById('avgSleep').textContent = avgSleep + 'h';
-        document.getElementById('bestDay').textContent = bestDay;
-        document.getElementById('sleepQuality').textContent = quality + '/100';
+        document.getElementById('bestDay').textContent = bestEntry.day;
+        document.getElementById('sleepQuality').textContent = Math.round((avgSleep / 8.5) * 100) + '/100';
 
-        // Update meters
         const avgEnergy = Math.round(data.reduce((sum, h) => sum + h.energy, 0) / data.length);
         const avgFocus = Math.round(data.reduce((sum, h) => sum + h.focus, 0) / data.length);
-        const avgTask = Math.round((avgEnergy + avgFocus) / 2);
+        const avgTask = Math.round(data.reduce((sum, h) => sum + getTaskPerformanceValue(h.energy), 0) / data.length);
 
         document.getElementById('energyPercent').textContent = avgEnergy + '%';
         document.getElementById('energyBar').style.width = avgEnergy + '%';
-        
         document.getElementById('focusPercent').textContent = avgFocus + '%';
         document.getElementById('focusBar').style.width = avgFocus + '%';
-        
         document.getElementById('taskPercent').textContent = avgTask + '%';
         document.getElementById('taskBar').style.width = avgTask + '%';
 
-        // Update insights
-        updateInsights(data, filter);
+        updateInsights(data, document.getElementById('patternFilter').value);
     }
 
     function updateInsights(data, filter) {
         const container = document.getElementById('insightsContainer');
-        let html = '';
-
         if (data.length === 0) {
-            html = `
-                <div class="insight-item">
-                    <div class="insight-icon">💡</div>
-                    <div class="insight-content">
-                        <div class="insight-title">No ${filter !== 'all' ? filter : ''} Data</div>
-                        <div class="insight-text">No sleep data matches the current filter. Try logging more sleep entries.</div>
-                    </div>
-                </div>
-            `;
+            container.innerHTML = `<div class="insight-item"><div class="insight-icon">💡</div><div class="insight-content"><div class="insight-title">No ${filter !== 'all' ? filter : ''} Data</div><div class="insight-text">No sleep data matches the current filter.</div></div></div>`;
+            return;
+        }
+        const avgSleep = data.reduce((sum, h) => sum + h.hours, 0) / data.length;
+        const bestEntry = data.reduce((best, curr) => curr.productivity > best.productivity ? curr : best);
+        
+        let insightsHTML = '';
+        if (avgSleep >= 7.5) {
+            insightsHTML += `<div class="insight-item"><div class="insight-icon">⚡</div><div class="insight-content"><div class="insight-title">Optimal Sleep</div><div class="insight-text">Your average of ${avgSleep.toFixed(1)}h is in the optimal range.</div></div></div>`;
         } else {
-            const avgSleep = data.reduce((sum, h) => sum + h.hours, 0) / data.length;
-            const bestEntry = data.reduce((best, curr) => curr.productivity > best.productivity ? curr : best);
-
-            if (avgSleep >= 7.5) {
-                html += `
-                    <div class="insight-item">
-                        <div class="insight-icon">⚡</div>
-                        <div class="insight-content">
-                            <div class="insight-title">Optimal Sleep Range</div>
-                            <div class="insight-text">Your average sleep of ${avgSleep.toFixed(1)} hours is in the optimal range for productivity.</div>
-                        </div>
-                    </div>
-                `;
-            } else {
-                html += `
-                    <div class="insight-item">
-                        <div class="insight-icon">💡</div>
-                        <div class="insight-content">
-                            <div class="insight-title">Sleep Improvement</div>
-                            <div class="insight-text">Aim for 7.5-8 hours of sleep to reach optimal productivity levels.</div>
-                        </div>
-                    </div>
-                `;
-            }
-
-            html += `
-                <div class="insight-item">
-                    <div class="insight-icon">🎯</div>
-                    <div class="insight-content">
-                        <div class="insight-title">Peak Performance</div>
-                        <div class="insight-text">Your best day was ${bestEntry.day} with ${bestEntry.hours} hours of sleep.</div>
-                    </div>
-                </div>
-            `;
+            insightsHTML += `<div class="insight-item"><div class="insight-icon">💡</div><div class="insight-content"><div class="insight-title">Improve Sleep Duration</div><div class="insight-text">Aim for 7.5-8 hours of sleep to boost productivity.</div></div></div>`;
         }
-
-        container.innerHTML = html;
+        insightsHTML += `<div class="insight-item"><div class="insight-icon">🎯</div><div class="insight-content"><div class="insight-title">Peak Performance</div><div class="insight-text">Your best day was ${bestEntry.day} with ${bestEntry.hours}h of sleep.</div></div></div>`;
+        container.innerHTML = insightsHTML;
     }
 
-    // Calendar function
-    function generateCalendar() {
-        const grid = document.getElementById('calendarGrid');
-        const state = loadState();
-        
-        // Clear existing calendar
-        grid.innerHTML = '';
-        
-        // Day labels
-        const days = ['S', 'M', 'T', 'W', 'TH', 'F', 'S'];
-        days.forEach(day => {
-            const label = document.createElement('div');
-            label.className = 'day-label';
-            label.textContent = day;
-            grid.appendChild(label);
-        });
+function parseEntryDate(entry) {
+  if (!entry || !entry.date) {
+    return null;
+  }
+  const d = entry.date;
+  if (typeof d === 'string' && d.indexOf('/') !== -1) {
+    const parts = d.split('/');
+    if (parts.length === 3) {
+      const mm = parseInt(parts[0], 10) - 1;
+      const dd = parseInt(parts[1], 10);
+      const yyyy = parseInt(parts[2], 10);
+      if (!isNaN(mm) && !isNaN(dd) && !isNaN(yyyy)) {
+        return new Date(yyyy, mm, dd);
+      }
+    }
+  }
 
-        // Generate days for current month
-        const today = new Date();
-        const currentDay = today.getDate();
-        const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
-        const firstDayOfWeek = new Date(today.getFullYear(), today.getMonth(), 1).getDay();
+  const fallback = new Date(d);
+  if (!isNaN(fallback.getTime())) return fallback;
 
-        // Empty cells before month starts
-        for (let i = 0; i < firstDayOfWeek; i++) {
-            const empty = document.createElement('div');
-            empty.className = 'calendar-day empty';
-            grid.appendChild(empty);
-        }
+  return null;
+}
 
-        // Actual days
-        for (let day = 1; day <= daysInMonth; day++) {
-            const dayCell = document.createElement('div');
-            dayCell.className = 'calendar-day';
-            dayCell.textContent = day;
+function generateCalendar() {
+  const grid = document.getElementById('calendarGrid');
+  const state = loadState();
+  grid.innerHTML = '';
 
-            // Find if we have data for this day
-            const dayData = state.history.find(h => {
-                const entryDate = new Date(h.date);
-                return entryDate.getDate() === day && 
-                       entryDate.getMonth() === today.getMonth() && 
-                       entryDate.getFullYear() === today.getFullYear();
-            });
+  const days = ['S', 'M', 'T', 'W', 'TH', 'F', 'S'];
+  days.forEach(day => {
+    const label = document.createElement('div');
+    label.className = 'day-label';
+    label.textContent = day;
+    grid.appendChild(label);
+  });
 
-            if (day > currentDay) {
-                dayCell.classList.add('future');
-            } else if (dayData) {
-                if (dayData.hours >= 8) {
-                    dayCell.classList.add('excellent');
-                } else if (dayData.hours >= 7) {
-                    dayCell.classList.add('good');
-                } else if (dayData.hours >= 6) {
-                    dayCell.classList.add('fair');
-                } else {
-                    dayCell.classList.add('poor');
-                }
-            } else {
-                dayCell.classList.add('poor');
-            }
+  const today = new Date();
+  const entries = state.history || [];
 
-            grid.appendChild(dayCell);
-        }
-        
-        // Update calendar month display
-        const monthNames = ["January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"
-        ];
-        document.getElementById('calendarMonth').textContent = 
-            `${monthNames[today.getMonth()]} ${today.getFullYear()}`;
+  const simulatedDates = entries.map((_, i) => {
+    const d = new Date(today);
+    d.setDate(today.getDate() + i);
+    return d;
+  });
+
+  if (simulatedDates.length > 0) {
+    const firstDayOfWeek = simulatedDates[0].getDay();
+    for (let i = 0; i < firstDayOfWeek; i++) {
+      const empty = document.createElement('div');
+      empty.className = 'calendar-day empty';
+      grid.appendChild(empty);
+    }
+  }
+
+  simulatedDates.forEach((dateObj, i) => {
+    const entry = entries[i];
+    const dayCell = document.createElement('div');
+    dayCell.className = 'calendar-day';
+
+    const dayNum = dateObj.getDate();
+    dayCell.textContent = dayNum;
+
+    const hours = entry.hours || 0;
+    if (hours >= 8) dayCell.classList.add('excellent');
+    else if (hours >= 7) dayCell.classList.add('good');
+    else if (hours >= 6) dayCell.classList.add('fair');
+    else dayCell.classList.add('poor');
+
+    if (dateObj.toDateString() === today.toDateString()) {
+      dayCell.classList.add('today');
     }
 
-    // Main update function
-    function updateDisplay() {
-        updateStats();
-        drawLineChart();
-        generateCalendar();
-    }
+    const dateLabel = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', weekday: 'short' });
+    dayCell.title = `${dateLabel} • ${hours}h sleep`;
 
-    // Initialize the app - UPDATED with better timing
+    grid.appendChild(dayCell);
+  });
+
+  const totalCells = grid.querySelectorAll('.calendar-day').length - days.length;
+  const mod = totalCells % 7;
+  if (mod !== 0) {
+    for (let i = 0; i < 7 - mod; i++) {
+      const filler = document.createElement('div');
+      filler.className = 'calendar-day future';
+      grid.appendChild(filler);
+    }
+  }
+
+  const firstDate = simulatedDates[0] || today;
+  document.getElementById('calendarMonth').textContent = firstDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+}
     document.addEventListener('DOMContentLoaded', function() {
         initializeApp();
-        
-        // Small delay to ensure DOM is fully rendered before drawing chart
         setTimeout(() => {
-            updateDisplay();
+            updateStats();
+            drawLineChart();
+            generateCalendar();
         }, 100);
         
-        // Add event listener for filter changes
         document.getElementById('patternFilter').addEventListener('change', updateChart);
         
-        // Redraw chart on window resize with debounce
         let resizeTimeout;
         window.addEventListener('resize', function() {
             clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => {
-                drawLineChart(document.getElementById('patternFilter').value);
-            }, 250);
+            resizeTimeout = setTimeout(() => drawLineChart(document.getElementById('patternFilter').value), 250);
         });
     });
 </script>
