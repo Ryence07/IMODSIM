@@ -470,12 +470,11 @@
         }
 
         function cancelEdit() {
-            loadProfile(); // Reset values
+            loadProfile(); 
             toggleEditMode();
         }
 
         function saveProfile(event) {
-            // Get current profile to preserve memberSince
             const saved = localStorage.getItem('sleepTrackerProfile');
             const currentProfile = saved ? JSON.parse(saved) : {};
             
@@ -505,16 +504,14 @@
 
             // Save to localStorage
             localStorage.setItem('sleepTrackerProfile', JSON.stringify(profile));
-            console.log('Profile saved:', profile); // Debug log
+            console.log('Profile saved:', profile);
             
-            // Show success feedback first
             const saveBtn = event ? event.target : document.querySelector('.save-button');
             const originalText = saveBtn.textContent;
             const originalBg = saveBtn.style.background;
             saveBtn.textContent = '✓ Saved!';
             saveBtn.style.background = '#28a745';
             
-            // Update the display with new data
             document.getElementById('displayName').textContent = profile.name;
             document.getElementById('sidebarName').textContent = profile.name;
             
@@ -527,7 +524,6 @@
             document.getElementById('viewAddress').textContent = profile.address || 'No address set';
             document.getElementById('viewGoal').textContent = profile.sleepGoal + ' hours';
             
-            // Wait a bit before toggling back to view mode
             setTimeout(() => {
                 saveBtn.textContent = originalText;
                 saveBtn.style.background = originalBg;
@@ -535,11 +531,9 @@
             }, 1500);
         }
 
-        // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
             loadProfile();
             
-            // Ensure edit mode is hidden initially
             const editMode = document.getElementById('editMode');
             editMode.style.display = 'none';
         });
